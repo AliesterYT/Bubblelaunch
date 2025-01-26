@@ -6,22 +6,31 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] TextMeshPro timerText;
-    float startingTime = 30f;
+    [SerializeField] TMP_Text countdownText;
+    [SerializeField] float startingTime = 30f;
     float currentTime = 0f;
 
-    [SerializeField] Text countdownText;
-
-    // Start is called before the first frame update
     void Start()
     {
         currentTime = startingTime;
+        currentTime = Mathf.Max(currentTime, 0);
     }
 
-    // Update is called once per frame
     void Update()
     {
-       currentTime -= 1 * Time.deltaTime;
-        countdownText.text = countdownText.ToString() + "s";
+        currentTime -= Time.deltaTime;
+        countdownText.text = currentTime.ToString("F2") + "s";
+        //Debug.Log("Time");
+
+        if (currentTime < 0)
+        {
+            Destroy(GameObject.FindWithTag("Player"));
+            Debug.Log("Dead");
+            GameObject.Find("Camera").GetComponent<Camera>().enabled = true;
+            GameObject.Find("InfoCanvas").GetComponent<Canvas>().enabled = false;
+            GameObject.Find("EndCanvasFail").GetComponent<Canvas>().enabled = true;
+            Destroy(gameObject);
+        }
+
     }
 }
